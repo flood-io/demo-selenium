@@ -1,4 +1,3 @@
-*.jar
 *.class
 jmeter.log
 Customer.java
