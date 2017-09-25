@@ -150,7 +150,7 @@ public class FloodSump {
     data.put("request_headers", "");
     data.put("response_headers", "");
     data.put("request_data", "");
-    data.put("response_data", (successful.equals("false")) ? driver.getPageSource() : "");
+    // data.put("response_data", (successful.equals("false")) ? driver.getPageSource() : "");
     data.put("response_code", getValueOrDefault(String.valueOf(responseCode), ""));
     data.put("bytes", getValueOrDefault( String.valueOf(driver.getPageSource().length()), ""));
 
