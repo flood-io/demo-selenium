@@ -19,7 +19,13 @@ test started
 
 # Windows
 ```
-javac -cp .:*:lib:lib\* -d lib src\io\flood\selenium\FloodSump.java
-javac -cp .:*:lib:lib\* test\*.java
-cp test\*.class .
+"%ProgramFiles%\Java\jdk1.8.0_144\bin\javac" -cp .;*;lib;lib\* -d lib src\io\flood\selenium\FloodSump.java
+"%ProgramFiles%\Java\jdk1.8.0_144\bin\javac" -cp .;*;lib;lib\* test\*.java
+copy test\*.class .
+
+"%ProgramFiles%\Java\jdk1.8.0_144\bin\java" -jar lib\selenium-server-standalone-2.53.0.jar -port 4444 -debug
+
+set WEBDRIVER_HOST=localhost
+set WEBDRIVER_PORT=4444
+"%ProgramFiles%\Java\jdk1.8.0_144\bin\java" -Duuid=abcd123 -cp .;lib;lib/*;test/* Challenge
 ```
