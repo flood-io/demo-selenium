@@ -22,10 +22,17 @@ test started
 "%ProgramFiles%\Java\jdk1.8.0_144\bin\javac" -cp .;*;lib;lib\* -d lib src\io\flood\selenium\FloodSump.java
 "%ProgramFiles%\Java\jdk1.8.0_144\bin\javac" -cp .;*;lib;lib\* test\*.java
 copy test\*.class .
+```
 
-"%ProgramFiles%\Java\jdk1.8.0_144\bin\java" -jar lib\selenium-server-standalone-2.53.0.jar -port 4444 -debug
+Note for windows, make sure you [download a copy of Chrome driver](https://chromedriver.storage.googleapis.com/index.html) and copy it somewhere like `C:/Webdriver/chromedriver.exe`
 
+```
+"%ProgramFiles%\Java\jdk1.8.0_144\bin\java" -jar lib\selenium-server-standalone-2.53.0.jar -port 4444 -debug -Dwebdriver.chrome.driver="C:/Webdriver/chromedriver.exe"
+```
+
+```
 set WEBDRIVER_HOST=localhost
 set WEBDRIVER_PORT=4444
 "%ProgramFiles%\Java\jdk1.8.0_144\bin\java" -Duuid=abcd123 -cp .;lib;lib/*;test/* Challenge
 ```
+
