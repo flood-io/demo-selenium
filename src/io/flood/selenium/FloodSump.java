@@ -23,9 +23,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import com.google.common.base.Predicate;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.WebDriverException;
 
 public class FloodSump {
   private int width = 0, height = 0 ;
+  private String transactionName;
 
   public FloodSump()
   {
@@ -43,36 +45,48 @@ public class FloodSump {
     System.out.println("test finished");
   }
 
+  String getTransactionName() {
+    return transactionName;
+  }
+
+  public void start_transaction(String transactionName) {
+    this.transactionName = transactionName;
+  }
+
   public void passed_transaction(WebDriver driver, String label, Integer responseCode, Double responseTime) {
-    transaction(driver, label, "true", responseCode, responseTime);
+    transaction(driver, label, "true", responseCode, responseTime, null);
   }
 
   public void passed_transaction(WebDriver driver, String label, Integer responseCode) {
-    transaction(driver, label, "true", responseCode, null);
+    transaction(driver, label, "true", responseCode, null, null);
   }
 
   public void passed_transaction(WebDriver driver, String label) {
-    transaction(driver, label, "true", 200, null);
+    transaction(driver, label, "true", 200, null, null);
   }
 
   public void passed_transaction(WebDriver driver) {
-    transaction(driver, driver.getTitle(), "true", 200, null);
+    transaction(driver, driver.getTitle(), "true", 200, null, null);
+  }
+
+  public void webdriver_exception(WebDriver driver, WebDriverException exception) {
+    transaction(driver, transactionName, "false", 0, null, exception);
   }
 
   public void failed_transaction(WebDriver driver, String label, Integer responseCode, Double responseTime) {
-    transaction(driver, label, "false", responseCode, responseTime);
+    transaction(driver, label, "false", responseCode, responseTime, null);
   }
 
   public void failed_transaction(WebDriver driver, String label, Integer responseCode) {
-    transaction(driver, label, "false", responseCode, null);
+    transaction(driver, label, "false", responseCode, null, null);
   }
 
   public void failed_transaction(WebDriver driver, Integer responseCode) {
-    transaction(driver, driver.getTitle(), "false", responseCode, null);
+    transaction(driver, driver.getTitle(), "false", responseCode, null, null);
   }
 
   public void failed_transaction(WebDriver driver) {
-    transaction(driver, driver.getTitle(), "false", 500, null);
+    transaction(driver, driver.getTitle(), "false", 500, null, null);
   }
 
   public void get_mark(WebDriver driver, String mark) {
@@ -81,7 +95,7 @@ public class FloodSump {
     JavascriptExecutor js = (JavascriptExecutor)driver;
     double responseTime = new Double(js.executeScript("return window.performance.getEntriesByName('" + mark +"')[0].startTime;").toString());
 
-    transaction(driver, mark, "true", 200, responseTime);
+    transaction(driver, mark, "true", 200, responseTime, null);
   }
 
   public void get_measure(WebDriver driver, String measure) {
@@ -90,7 +104,7 @@ public class FloodSump {
     JavascriptExecutor js = (JavascriptExecutor)driver;
     double responseTime = new Double(js.executeScript("return window.performance.getEntriesByName('" + measure +"')[0].duration;").toString());
 
-    transaction(driver, measure, "true", 200, responseTime);
+    transaction(driver, measure, "true", 200, responseTime, null);
   }
 
   protected void waitForUserTiming(final WebDriver driver, final String type, final String name) {
@@ -98,7 +112,7 @@ public class FloodSump {
 
     new FluentWait<JavascriptExecutor>(js) {
         protected RuntimeException timeoutException(String message, Throwable lastException) {
-          transaction(driver, name, "false", null, null);
+          transaction(driver, name, "false", null, null, null);
           return null;
         }
       }.
@@ -121,7 +135,7 @@ public class FloodSump {
     return isNotNullOrEmpty(value) ? value : defaultValue;
   }
 
-  public void transaction(WebDriver driver, String label, String successful, Integer responseCode, Double responseTime) {
+  public void transaction(WebDriver driver, String label, String successful, Integer responseCode, Double responseTime, WebDriverException exception) {
     JavascriptExecutor js = (JavascriptExecutor)driver;
 
     ConcurrentMap data = new ConcurrentHashMap();
@@ -155,6 +169,7 @@ public class FloodSump {
     data.put("bytes", getValueOrDefault( String.valueOf(driver.getPageSource().length()), ""));
 
     System.out.println("Transaction: " + String.valueOf(label));
+    System.out.println("---");
     System.out.println(data);
     System.out.println("---");
   }

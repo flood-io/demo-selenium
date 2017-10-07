@@ -33,7 +33,7 @@ public class Challenge  {
     flood.started();
 
     // It's up to you to control test duration / iterations programatically.
-    while( iterations < 5 ) {
+    while( iterations < 1000 ) {
       try {
         System.out.println("Starting iteration " +  String.valueOf(iterations));
 
@@ -51,10 +51,12 @@ public class Challenge  {
         Select ageDropDown = new Select(driver.findElement(By.id("challenger_age")));
         ageDropDown.selectByVisibleText("30");
         driver.findElement(By.cssSelector("input[type='submit'][value='Next']")).click();
-
         flood.passed_transaction(driver, "Challenge Step 2");
 
-        // Log a failed transaction
+        // Set a transaction name going forward
+        flood.start_transaction("Click on Bingo Button");
+
+        // Example of a failing transaction that generates WebDriverException
         driver.findElement(By.cssSelector("input[type='submit'][value='Bingo']")).click();
 
         iterations++;
@@ -62,9 +64,8 @@ public class Challenge  {
         // Good idea to introduce some form of pacing / think time into your scripts
         Thread.sleep(1000);
       } catch (WebDriverException e) {
-        String[] lines = e.getMessage().split("\\r?\\n");
-        System.err.println("Webdriver exception: " + lines[0]);
-        flood.failed_transaction(driver, "Challenge Step 3 Failed", 400);
+        // Log a webdriver exception in flood
+        flood.webdriver_exception(driver, e);
       } catch(InterruptedException e) {
         Thread.currentThread().interrupt();
         String[] lines = e.getMessage().split("\\r?\\n");
