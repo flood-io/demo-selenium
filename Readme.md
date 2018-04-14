@@ -2,6 +2,8 @@
 
 This is a simple test repository for the Flood reporting engine used by Selenium in Tricentis Flood. The FloodSump itself is stubbed and will print results out to screen. The results are similar in value to what is recorded on Tricentis Flood. You can use this library to test your Tricentis Flood purposed Selenium scripts locally.
 
+You can use the Makefile on OSX / 'nix with `make chrome` or `make firefox`. Alternatively you can do this by hand below.
+
 # OSX / 'nix
 ```
 javac -cp .:*:lib:lib/* -d lib src/io/flood/selenium/FloodSump.java
