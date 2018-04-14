@@ -1,11 +1,12 @@
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriverException;
 
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriverException;
 
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -15,14 +16,14 @@ import org.openqa.selenium.support.ui.Select;
 
 import io.flood.selenium.FloodSump;
 
-public class Stubhub  {
+public class ChallengeFirefox  {
   public static void main(String[] args) throws Exception {
     int iterations = 0;
 
     // Create a new instance of the html unit driver
     // Notice that the remainder of the code relies on the interface,
     // not the implementation.
-    WebDriver driver = new RemoteWebDriver(new URL("http://" + System.getenv("WEBDRIVER_HOST") + ":" + System.getenv("WEBDRIVER_PORT") + "/wd/hub"), DesiredCapabilities.chrome());
+    WebDriver driver = new RemoteWebDriver(new URL("http://" + System.getenv("WEBDRIVER_HOST") + ":" + System.getenv("WEBDRIVER_PORT") + "/wd/hub"), DesiredCapabilities.firefox());
     JavascriptExecutor js = (JavascriptExecutor)driver;
 
     // Create a new instance of the Flood IO agent
@@ -34,29 +35,46 @@ public class Stubhub  {
     // It's up to you to control test duration / iterations programatically.
     while( iterations < 1000 ) {
       try {
+        System.out.println("Starting iteration " +  String.valueOf(iterations));
+
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
         // And now use this to visit the target site
-        driver.get("http://www.stubhub.com/");
+        driver.get("https://challengers.flood.io/");
 
         // Log a passed transaction in Flood IO
         flood.passed_transaction(driver);
 
-        // Log a custom mark from the User Timing API
-        flood.get_mark(driver, "mark-user-ready");
+        driver.findElement(By.cssSelector("input[type='submit'][value='Start']")).click();
 
-        // Log a custom measure from the User Timing API
-        flood.get_measure(driver, "measure-user-ready");
+        // Log a passed transaction with custom label
+        Select ageDropDown = new Select(driver.findElement(By.id("challenger_age")));
+        ageDropDown.selectByVisibleText("30");
+        driver.findElement(By.cssSelector("input[type='submit'][value='Next']")).click();
+        flood.passed_transaction(driver, "Challenge Step 2");
+
+        // Set a transaction name going forward
+        flood.start_transaction("Click on Bingo Button");
+
+        // Example of a failing transaction that generates WebDriverException
+        driver.findElement(By.cssSelector("input[type='submit'][value='Bingo']")).click();
 
         iterations++;
 
         // Good idea to introduce some form of pacing / think time into your scripts
-        Thread.sleep(3000);
+        Thread.sleep(1000);
+      } catch (WebDriverException e) {
+        // Log a webdriver exception in flood
+        flood.webdriver_exception(driver, e);
       } catch(InterruptedException e) {
         Thread.currentThread().interrupt();
         String[] lines = e.getMessage().split("\\r?\\n");
         System.err.println("Browser terminated early: " + lines[0]);
-      } catch (WebDriverException e) {
+      } catch(Exception e) {
         String[] lines = e.getMessage().split("\\r?\\n");
-        System.err.println(lines[0]);
+        System.err.println("Other exception: " + lines[0]);
+      } finally {
+        iterations++;
       }
     }
 
