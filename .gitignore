@@ -1,3 +1,5 @@
 *.class
 jmeter.log
 Customer.java
+.DS_Store
+
