@@ -4,6 +4,11 @@ This is a simple test repository for the Flood reporting engine used by Selenium
 
 # OSX / 'nix
 ```
+javac -cp .:*:lib:lib/* -d lib src/io/flood/selenium/FloodSump.java
+
+javac -cp .:*:lib:lib/* test/*.java
+cp test/*.class .
+
 docker run --rm -e JAVA_OPTS="-Dselenium.LOGGER.level=SEVERE" -d -p 4444:4444 --name=firefox selenium/standalone-firefox:3.11.0-californium || true
 WEBDRIVER_HOST=0.0.0.0 WEBDRIVER_PORT=4444 java -Duuid=`date +"%s"` -cp .:lib:lib/*:test/* ChallengeFirefox
 
