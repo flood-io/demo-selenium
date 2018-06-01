@@ -4,6 +4,9 @@ build:
 	javac -cp .:*:lib:lib/* test/*.java
 	cp test/*.class .
 
+stub:
+	nc -l -u 35663
+
 firefox: build
 	docker run --rm -e JAVA_OPTS="-Dselenium.LOGGER.level=SEVERE" -d -p 4444:4444 --name=firefox selenium/standalone-firefox:3.11.0-californium || true
 	WEBDRIVER_HOST=0.0.0.0 WEBDRIVER_PORT=4444 java -Duuid=`date +"%s"` -cp .:lib:lib/*:test/* ChallengeFirefox
