@@ -29,7 +29,10 @@ helpers:
 	# Inspect the JAR
 	jar tf /tmp/lib/custom.jar
 
-	# Make a zip of the 'lib' directory so flood knows to extract the JAR file(s) from this lib
+	# Copy JAR for local testing (not needed for Flood)
+	cp /tmp/lib/custom.jar test/
+
+	# Make a zip of the 'lib' directory so Flood knows to extract the JAR file(s) from this lib
 	cd /tmp && zip -r lib.zip lib/
 	ls -alt /tmp/lib.zip
 	cp /tmp/lib.zip test/

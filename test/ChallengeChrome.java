@@ -16,7 +16,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import io.flood.selenium.FloodSump;
 
-import helper.Custom;
+import helpers.CustomHelper;
 
 public class ChallengeChrome  {
   public static void main(String[] args) throws Exception {
@@ -28,8 +28,8 @@ public class ChallengeChrome  {
     WebDriver driver = new RemoteWebDriver(new URL("http://" + System.getenv("WEBDRIVER_HOST") + ":" + System.getenv("WEBDRIVER_PORT") + "/wd/hub"), DesiredCapabilities.chrome());
     JavascriptExecutor js = (JavascriptExecutor)driver;
 
-    Test tester = new Test();
-    tester.helloWorld();
+    CustomHelper helper = new CustomHelper();
+    helper.helloWorld();
 
     // Create a new instance of the Flood IO agent
     FloodSump flood = new FloodSump();
