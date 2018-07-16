@@ -1,7 +1,6 @@
+package helpers;
 
-package helper;
-
-public class Test {
+public class CustomHelper {
   public void helloWorld() {
     System.out.println("Hello, World");
   }
