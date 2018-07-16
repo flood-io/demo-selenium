@@ -22,7 +22,7 @@ helpers:
 	mkdir /tmp/lib
 	javac -cp .:*:lib:lib/* -d /tmp/lib src/helpers/*.java
 
-	# Then JAR it, using the root of the packaged class e.g. /tmp/lib NOT /tmp/lib/helper/test/etc
+	# Then JAR it, using the root of the packaged class e.g. /tmp/lib NOT /tmp/lib/helpers
 	jar cvf /tmp/lib/custom.jar -C /tmp/lib .
 	rm -rf /tmp/lib/helpers
 
@@ -31,10 +31,3 @@ helpers:
 
 	# Copy JAR for local testing (not needed for Flood)
 	cp /tmp/lib/custom.jar test/
-
-	# Make a zip of the 'lib' directory so Flood knows to extract the JAR file(s) from this lib
-	cd /tmp && zip -r lib.zip lib/
-	ls -alt /tmp/lib.zip
-	cp /tmp/lib.zip test/
-	rm -rf /tmp/lib
-
